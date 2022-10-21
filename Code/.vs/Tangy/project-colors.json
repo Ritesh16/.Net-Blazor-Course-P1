@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "cff9c1bf-dbf4-489e-8731-d9b0181ac01c": {
+      "ProjectGuid": "cff9c1bf-dbf4-489e-8731-d9b0181ac01c",
+      "DisplayName": "TangyWeb_Server",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}
