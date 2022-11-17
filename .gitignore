@@ -8,3 +8,6 @@
 /Code/TangyWeb_Client/obj
 /Code/Tangy_Models/bin/Debug/net6.0
 /Code/Tangy_Models/obj
+/Code/Tangy_Business/obj
+/Code/Tangy_Common/obj
+/Code/Tangy_Data/obj

@@ -5,7 +5,22 @@
       "ProjectGuid": "cff9c1bf-dbf4-489e-8731-d9b0181ac01c",
       "DisplayName": "TangyWeb_Server",
       "ColorIndex": 0
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": -1
+    },
+    "01e3973f-9199-4bfd-84f4-6f6882efd1fa": {
+      "ProjectGuid": "01e3973f-9199-4bfd-84f4-6f6882efd1fa",
+      "DisplayName": "TangyWeb_Client",
+      "ColorIndex": 1
+    },
+    "c2da1feb-caef-4a61-92d9-ecaec2becc2e": {
+      "ProjectGuid": "c2da1feb-caef-4a61-92d9-ecaec2becc2e",
+      "DisplayName": "Tangy_Models",
+      "ColorIndex": 2
     }
   },
-  "NextColorIndex": 1
+  "NextColorIndex": 3
 }
