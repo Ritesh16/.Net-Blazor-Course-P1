@@ -1,0 +1,12 @@
+﻿<h3>AttributesComponent</h3>
+<div>
+    <input @attributes ="@InputAttributes"  />
+</div>
+@code {
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<String, Object> InputAttributes { get; set; } = new Dictionary<string, object>();
+}
+
+
+<br/>
+<GrandChildComponent></GrandChildComponent>

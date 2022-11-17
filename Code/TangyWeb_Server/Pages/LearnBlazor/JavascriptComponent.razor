@@ -1,0 +1,30 @@
+﻿@page "/learnJS"
+
+<h3>JavascriptComponent</h3>
+
+@inject IJSRuntime _JSRuntime
+
+<div class="row">
+    <button class="btn btn-secondary" @onclick="TestConfirmBox">Test confirm button</button>
+</div>
+
+<div class="row">
+    @if(ConfirmResult)
+    {
+        <p>Confirmation has been made!</p>
+    }
+    else
+    {
+        <p>No confirmations</p>
+    }
+</div>
+
+@code {
+
+    private bool ConfirmResult { get; set; }
+    private async Task TestConfirmBox()
+    {
+        ConfirmResult = await _JSRuntime.InvokeAsync<bool>("confirm", "Do you want to continue?");
+    } 
+
+}

@@ -1,0 +1,55 @@
+﻿@if (IsActive)
+{
+    <h3>ShowComponent</h3>
+
+    <h2>I am a component</h2>
+}
+
+<br />
+Call Parent
+<input type="checkbox" @onchange="OnSelectionChanged" style="margin-left:10px" />
+
+
+<div class="alert alert-info">
+    @if (ChildContent != null)
+    {
+        <span>@ChildContent</span>
+    }
+</div>
+
+<button @onclick="ButtonClick" class="btn btn-danger">Click me!</button>
+
+
+<br />
+
+@if (ShowBool)
+{
+    <p>@ShowBool</p>
+}
+
+@code {
+
+    public bool ShowBool { get; set; }
+
+    [Parameter]
+    public bool IsActive { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OnFavoriteClick { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public EventCallback ButtonClick { get; set; }
+
+    private async Task OnSelectionChanged(ChangeEventArgs e)
+    {
+        await OnFavoriteClick.InvokeAsync((bool)e.Value);
+    }
+
+    public void ShowSomething()
+    {
+        ShowBool = !ShowBool;
+    }
+}

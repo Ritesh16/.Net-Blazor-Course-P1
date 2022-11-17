@@ -1,0 +1,69 @@
+﻿<h3>BindProperty</h3>
+
+@page "/learnblazor/bindprop"
+@using Tangy_Models.LearningBlazor
+
+Product : @Product.Name
+<br />
+Price : @Product.Price
+<br />
+IsActive : @Product.IsActive
+<br />
+
+This product is @(Product.IsActive ? "Active" : "Inactive")
+<br />
+
+IsActive
+<input type="checkbox" @bind-value="@Product.IsActive" @bind-value:event="oninput" checked="@(Product.IsActive?"checked":null)" />
+
+<input type="number" @bind-value="@Product.Price" @bind-value:event="oninput" />
+
+<ShowComponent @ref="showComponent" ButtonClick="ButtonClickParent" IsActive="false" OnFavoriteClick="ClickMe">
+    Hello some content from inside the tag
+</ShowComponent>
+
+
+<ShowComponent @ref="showComponent" ButtonClick="ButtonClickParent" IsActive="true" OnFavoriteClick="ClickMe">
+    <ChildContent>Hello some content from inside the tag</ChildContent>
+</ShowComponent>
+
+<button @onclick="()=>showComponent.ShowSomething()" class="btn btn-primary">Call child method</button>
+
+@if (showMessage != null)
+{
+    <div class="alert alert-info">
+        @showMessage
+    </div>
+}
+
+<CascadingValue Value="@message">
+    <AttributesComponent placeholder="hello from parent" maxLength="2"></AttributesComponent>
+</CascadingValue>
+
+@code {
+    private string message = "this is a cascading message";
+    private string showMessage = "";
+    private ShowComponent showComponent;
+
+    DemoProduct Product = new DemoProduct()
+        {
+            Id = 1,
+            Name = "Apple",
+            IsActive = true,
+            Price = 10.20
+        };
+
+    public void ClickMe(bool a)
+    {
+        Product.IsActive = a;
+
+    }
+
+    public void ButtonClickParent()
+    {
+        showMessage = "Button was clicked";
+
+    }
+
+
+}
