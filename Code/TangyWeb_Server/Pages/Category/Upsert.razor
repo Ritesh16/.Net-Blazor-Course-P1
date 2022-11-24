@@ -1,0 +1,19 @@
+﻿@page "/category/create"
+
+<div class="row my-2">
+    <h3 class="card-subtitle text-primary mb-3 ml-3">@Title Category</h3>
+    <div class="col-12">
+        <EditForm Model="Category">
+            <div class="form-group">
+                <label>Name</label>
+                <InputText @bind-Value="Category.Name" class="form-control"></InputText>
+            </div>
+        </EditForm>
+
+    </div>
+</div>
+@code {
+    private CategoryDto Category { get; set; } = new CategoryDto();
+    private string Title { get; set; }
+
+}
