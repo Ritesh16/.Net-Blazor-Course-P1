@@ -1,14 +1,68 @@
 ﻿@page "/category"
+@inject ICategoryRepository _categoryRepository
 
-<div class = "row mt-4">
+<div class="row mt-4">
     <div class="col-6">
         <h4 class="card-title text-primary">Category List</h4>
     </div>
     <div class="col-4 offset-2">
         <a href="category/create" class="btn alert-primary form-control">Add New Category</a>
     </div>
+
+    <div class="col-12">
+        @if (categories.Any())
+        {
+            <table class="table table-bordered">
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Action
+                    </th>
+                </tr>
+                @foreach (var category in categories)
+                {
+                    <tr>
+                        <td>
+                            @category.Name
+                        </td>
+                        <td>
+                            <NavLink href="" class="btn btn-primary">Edit</NavLink>
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+        else
+        {
+            if (IsLoading)
+            {
+                <div style="text-align:center">
+                    <img src="images/loading.gif" />
+                </div>
+            }
+            else
+            {
+                <p>No catgeories found.</p>
+            }
+        }
+    </div>
 </div>
 
 @code {
+    private IEnumerable<CategoryDto> categories = new List<CategoryDto>();
 
+    public bool IsLoading { get; set; } = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Run(LoadCategories);
+    }
+
+    private void LoadCategories()
+    {
+        categories = _categoryRepository.GetAll();
+        IsLoading = false;
+    }
 }
