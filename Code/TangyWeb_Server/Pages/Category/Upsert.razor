@@ -38,18 +38,21 @@
 
     [Parameter]
     public int Id { get; set; }
-    public bool IsLoading { get; set; } = true;
+    public bool IsLoading { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (Id == 0)
+        if (firstRender)
         {
-            IsLoading = false;
-        }
-        else
-        {
-            Title = "Edit";
-            await Task.Run(LoadCategory);
+            if (Id == 0)
+            {
+                IsLoading = false;
+            }
+            else
+            {
+                Title = "Edit";
+                LoadCategory();
+            }
         }
     }
 
@@ -70,7 +73,10 @@
 
     private void LoadCategory()
     {
+        IsLoading = true;
+        StateHasChanged();
         Category = _categoryRepository.Get(Id);
         IsLoading = false;
+        StateHasChanged();
     }
 }

@@ -60,15 +60,21 @@
     public bool IsLoading { get; set; } = true;
 
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await Task.Run(LoadCategories);
+        if (firstRender)
+        {
+            LoadCategories();
+        }
     }
 
     private void LoadCategories()
     {
+        IsLoading = true;
+        StateHasChanged();
         categories = _categoryRepository.GetAll();
         IsLoading = false;
+        StateHasChanged();
     }
 
     private void Delete(int id)
