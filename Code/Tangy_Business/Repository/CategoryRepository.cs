@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,32 +22,32 @@ namespace Tangy_Business.Repository
             _context = context;
             _mapper = mapper;   
         }
-        public CategoryDto Create(CategoryDto categoryDto)
+        public async Task<CategoryDto> Create(CategoryDto categoryDto)
         {
             var category = _mapper.Map<Category>(categoryDto);
             category.CreatedDate = DateTime.Now;
 
-            var addedCategory = _context.Categories.Add(category);
-            _context.SaveChanges();
+            var addedCategory = await _context.Categories.AddAsync(category);
+            await _context.SaveChangesAsync();
 
             return _mapper.Map<Category, CategoryDto>(addedCategory.Entity);
         }
 
-        public int Delete(int id)
+        public async Task<int> Delete(int id)
         {
-            var category = _context.Categories.FirstOrDefault(x => x.Id == id);
+            var category = await _context.Categories.FirstOrDefaultAsync(x => x.Id == id);
             if (category != null)
             {
                 _context.Categories.Remove(category);
-                return _context.SaveChanges();
+                return await _context.SaveChangesAsync();
             }
 
             return 0;
         }
 
-        public CategoryDto Get(int id)
+        public async Task<CategoryDto> Get(int id)
         {
-            var category = _context.Categories.FirstOrDefault(x => x.Id == id);
+            var category = await _context.Categories.FirstOrDefaultAsync(x => x.Id == id);
             if (category != null)
             {
                 return _mapper.Map<Category, CategoryDto>(category);
@@ -55,19 +56,19 @@ namespace Tangy_Business.Repository
             return new CategoryDto();
         }
 
-        public IEnumerable<CategoryDto> GetAll()
+        public async Task<IEnumerable<CategoryDto>> GetAll()
         {
-            return _mapper.Map<IEnumerable<Category>, IEnumerable<CategoryDto>>(_context.Categories);
+            return _mapper.Map<IEnumerable<Category>, IEnumerable<CategoryDto>>(await _context.Categories.ToListAsync());
         }
 
-        public CategoryDto Update(CategoryDto categoryDto)
+        public async Task<CategoryDto> Update(CategoryDto categoryDto)
         {
-            var category = _context.Categories.FirstOrDefault(x => x.Id == categoryDto.Id);
+            var category = await _context.Categories.FirstOrDefaultAsync(x => x.Id == categoryDto.Id);
             if (category != null)
             {
                 category.Name = categoryDto.Name;
                 _context.Categories.Update(category);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
                 return _mapper.Map<Category, CategoryDto>(category);
             }
