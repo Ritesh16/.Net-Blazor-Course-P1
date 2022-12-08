@@ -5,6 +5,8 @@ using Tangy_Business.Repository;
 using Tangy_Business.Repository.Interfaces;
 using Tangy_Data;
 using TangyWeb_Server.Data;
+using TangyWeb_Server.Services;
+using TangyWeb_Server.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,7 @@ builder.Services.AddSingleton<WeatherForecastService>();
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IFileUpload, FileUpload>();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
