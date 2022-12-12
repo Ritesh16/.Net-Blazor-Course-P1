@@ -5,6 +5,7 @@
 @inject ICategoryRepository _categoryRepository
 @inject NavigationManager _navigationManager
 @inject IFileUpload _fileUpload
+@inject IJSRuntime _jsRuntime
 
 <div class="row my-2">
     <h3 class="card-subtitle text-primary mb-3 ml-3">@Title Product</h3>
@@ -137,7 +138,7 @@
                 foreach (var file in e.GetMultipleFiles())
                 {
                     FileInfo fileInfo = new FileInfo(file.Name);
-                    if  (fileInfo.Extension.ToLower() == ".jpg" ||
+                    if (fileInfo.Extension.ToLower() == ".jpg" ||
                         fileInfo.Extension.ToLower() == ".jpeg" ||
                         fileInfo.Extension.ToLower() == ".png")
                     {
@@ -145,14 +146,18 @@
                     }
                     else
                     {
-                        
+                        await _jsRuntime.ToastrSuccess("Please select jpg/jpeg/png file only.");
                     }
                 }
             }
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-
+            await _jsRuntime.ToastrError(ex.Message);
+        }
+        finally
+        {
+            IsLoading = false;
         }
     }
 }

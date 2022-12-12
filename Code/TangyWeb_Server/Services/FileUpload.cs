@@ -25,7 +25,7 @@ namespace TangyWeb_Server.Services
         public async Task<string> UploadFile(IBrowserFile file)
         {
             FileInfo fileInfo = new(file.Name);
-            var fileName = $"{Guid.NewGuid().ToString()}\\{fileInfo.Extension}";
+            var fileName = $"{Guid.NewGuid().ToString()}{fileInfo.Extension}";
             var directoryPath = $"{_webHostEnvironment.WebRootPath}\\images\\products";
             if (Directory.Exists(directoryPath))
             {
