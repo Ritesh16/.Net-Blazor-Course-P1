@@ -19,5 +19,10 @@ namespace Tangy_Models.Dtos
 
         public CategoryDto Category { get; set; }
 
+        public ProductDto()
+        {
+            ImageUrl = "/images/default.png";
+        }
+
     }
 }

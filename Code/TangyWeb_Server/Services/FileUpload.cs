@@ -37,7 +37,7 @@ namespace TangyWeb_Server.Services
             await file.OpenReadStream().CopyToAsync(fileStream);
 
             var fullPath = $"\\images\\products\\{fileName}";
-            return filePath;
+            return fullPath;
         }
     }
 }

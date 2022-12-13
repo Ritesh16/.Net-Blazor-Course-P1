@@ -65,17 +65,24 @@
                     </InputSelect>
                     <ValidationMessage For="()=>Product.CategoryId"></ValidationMessage>
                 </div>
-                <div class="btn-group col-6">
+                <div class="form-group pt-4 col-6">
                     <InputFile OnChange="UploadImage"></InputFile>
                 </div>
-                <div class="form-group py-2">
-                    <button class="btn btn-primary">@Title</button>
-                    <NavLink href="product" class="btn btn-secondary">Back to Index</NavLink>
-                </div>
+
+
             </div>
+            <div class="form-group py-2">
+                <button class="btn btn-primary">@Title</button>
+                <NavLink href="product" class="btn btn-secondary">Back to Index</NavLink>
+            </div>
+
         </EditForm>
         }
 
+    </div>
+
+    <div class="col-md-2">
+        <img src="@Product.ImageUrl" class="w-100" alt="product">
     </div>
 </div>
 @code {

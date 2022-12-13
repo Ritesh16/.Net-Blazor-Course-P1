@@ -20,6 +20,9 @@
                         Name
                     </th>
                     <th>
+                        Category
+                    </th>
+                    <th>
                         Shop Favorites
                     </th>
                     <th>
@@ -34,6 +37,9 @@
                     <tr>
                         <td>
                             @product.Name
+                        </td>
+                        <td>
+                            @product.Category.Name
                         </td>
                         <td>
                             <input type="checkbox" disabled checked="@product.ShopFavorites" />

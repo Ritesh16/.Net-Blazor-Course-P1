@@ -63,6 +63,13 @@ namespace Tangy_Business.Repository
             if (product != null)
             {
                 product.Name = productDto.Name;
+                product.Description = productDto.Description;
+                product.ImageUrl = productDto.ImageUrl;
+                product.CategoryId = productDto.CategoryId;
+                product.Color = productDto.Color;
+                product.ShopFavorites = productDto.ShopFavorites;
+                product.CustomerFavorites = productDto.CustomerFavorites;
+
                 _context.Products.Update(product);
                 await _context.SaveChangesAsync();
 
