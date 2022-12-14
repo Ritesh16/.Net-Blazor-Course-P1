@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
+using Syncfusion.Blazor;
 using Tangy_Business.Repository;
 using Tangy_Business.Repository.Interfaces;
 using Tangy_Data;
@@ -8,11 +9,15 @@ using TangyWeb_Server.Data;
 using TangyWeb_Server.Services;
 using TangyWeb_Server.Services.Interfaces;
 
+
 var builder = WebApplication.CreateBuilder(args);
+Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(builder.Configuration.GetValue<string>("SyncfusionLicense"));
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddSyncfusionBlazor();
+
 builder.Services.AddSingleton<WeatherForecastService>();
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();

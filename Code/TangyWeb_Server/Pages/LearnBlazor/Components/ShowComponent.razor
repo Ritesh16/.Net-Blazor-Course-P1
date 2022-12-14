@@ -43,7 +43,7 @@ Call Parent
     [Parameter]
     public EventCallback ButtonClick { get; set; }
 
-    private async Task OnSelectionChanged(ChangeEventArgs e)
+    private async Task OnSelectionChanged(Microsoft.AspNetCore.Components.ChangeEventArgs e)
     {
         await OnFavoriteClick.InvokeAsync((bool)e.Value);
     }
