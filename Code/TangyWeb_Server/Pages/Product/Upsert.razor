@@ -88,6 +88,7 @@
 @code {
     private ProductDto Product { get; set; } = new ProductDto();
     private IEnumerable<CategoryDto> Categories { get; set; } = new List<CategoryDto>();
+    public string OldImageUrl { get; set; }
 
     private string Title { get; set; } = "Create";
 
@@ -109,11 +110,19 @@
         if (Id == 0)
         {
             await _productRepository.Create(Product);
+            await _jsRuntime.ToastrSuccess("Product created successfully.");
         }
         else
         {
-            await _productRepository.Update(Product);
+            //update
+            if (OldImageUrl != Product.ImageUrl)
+            {
+                _fileUpload.DeleteFile(OldImageUrl);
 
+            }
+
+            await _productRepository.Update(Product);
+            await _jsRuntime.ToastrSuccess("Product updated successfully.");
         }
 
         _navigationManager.NavigateTo("Product");
@@ -129,6 +138,7 @@
             //update
             Title = "Update";
             Product = await _productRepository.Get(Id);
+            OldImageUrl = Product.ImageUrl;
         }
 
         IsLoading = false;
@@ -153,7 +163,7 @@
                     }
                     else
                     {
-                        await _jsRuntime.ToastrSuccess("Please select jpg/jpeg/png file only.");
+                        await _jsRuntime.ToastrError("Please select jpg/jpeg/png file only.");
                     }
                 }
             }

@@ -1,6 +1,7 @@
 ﻿@page "/product"
 @inject IProductRepository _productRepository
 @inject IJSRuntime _jsRuntime
+@inject IFileUpload _fileUpload
 
 <_DeleteConfirmation IsParentProcessing="IsLoading" ConfirmationChanged="ConfirmDelete_Click"></_DeleteConfirmation>
 <div class="row mt-4">
@@ -106,12 +107,18 @@
         IsLoading = true;
         if (isConfirmed && DeletedProductId != 0)
         {
+            var productDto = await _productRepository.Get(DeletedProductId);
+            if (!productDto.ImageUrl.Contains("default"))
+            {
+                _fileUpload.DeleteFile(productDto.ImageUrl);
+            }
+
             await _productRepository.Delete(DeletedProductId);
             await LoadProducts();
+            await _jsRuntime.ToastrSuccess("Product deleted successfully.");
         }
 
         await _jsRuntime.InvokeVoidAsync("HideDeleteConfirmation");
-
         IsLoading = false;
     }
 }
