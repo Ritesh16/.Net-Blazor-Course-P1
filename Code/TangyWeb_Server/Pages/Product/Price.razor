@@ -25,21 +25,27 @@ else
 
     </div>
 
-    <SfGrid DataSource="@ProductPrices" AllowPaging="true" Toolbar="@(new List<string>{"Add", "Edit", "Delete", "Update"})">
+    <SfGrid @ref="productPriceGrid" DataSource="@ProductPrices" AllowPaging="true" Toolbar="@(new List<string>{"Add", "Edit", "Delete", "Update"})" AllowFiltering="true" AllowSorting="true">
         <GridEditSettings AllowAdding="true" AllowDeleting="true" AllowEditing="true" ShowDeleteConfirmDialog="true"></GridEditSettings>
-        <GridEvents OnActionBegin="GridActionHandler" TValue="ProductPriceDto">
-
-        </GridEvents>
+        <GridEvents OnActionBegin="GridActionHandler" TValue="ProductPriceDto"></GridEvents>
+       @* <GridPageSettings PageSize="5" PageCount="5" PageSizes="5"></GridPageSettings>
+        <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
+        <GridSortSettings AllowUnsort="false">
+            <GridSortColumns>
+                <GridSortColumn Field="Price" Direction="SortDirection.Ascending"></GridSortColumn>
+            </GridSortColumns>
+        </GridSortSettings>*@
         <GridColumns>
-            <GridColumn Field=@nameof(ProductPriceDto.Id) HeaderText="ID" TextAlign="TextAlign.Right" Width="120"></GridColumn>
-            <GridColumn Field=@nameof(ProductPriceDto.Size) HeaderText="Size" Width="150">
+            <GridColumn IsPrimaryKey="true" AllowAdding="false" Field=@nameof(ProductPriceDto.Id) HeaderText="ID"></GridColumn>
+            <GridColumn Field=@nameof(ProductPriceDto.Size) HeaderText="Size">
                 <EditTemplate>
                     <Syncfusion.Blazor.DropDowns.SfDropDownList DataSource="sizeList" TItem="string" TValue="string" @bind-Value="((context as ProductPriceDto).Size)">
 
                     </Syncfusion.Blazor.DropDowns.SfDropDownList>
                 </EditTemplate>
             </GridColumn>
-            <GridColumn Field=@nameof(ProductPriceDto.Price) HeaderText="Price" Format="d" Type="ColumnType.Date" TextAlign="TextAlign.Right" Width="130"></GridColumn>
+            <GridColumn Field=@nameof(ProductPriceDto.Price) HeaderText="Price" Format="C2"></GridColumn>
+            
         </GridColumns>
     </SfGrid>
 
@@ -52,6 +58,8 @@ else
     private ProductDto Product { get; set; } = new();
     private IEnumerable<ProductPriceDto> ProductPrices { get; set; } = new List<ProductPriceDto>();
     private bool IsLoading { get; set; } = true;
+
+    public SfGrid<ProductPriceDto> productPriceGrid;
 
     private IEnumerable<string> sizeList = new List<string>()
         {
@@ -73,6 +81,25 @@ else
 
     public async void GridActionHandler(ActionEventArgs<ProductPriceDto> args)
     {
-         
+        if (args.RequestType.Equals(Syncfusion.Blazor.Grids.Action.Save))
+        {
+            args.Data.ProductId = Id;
+            if (args.Action == "Add")
+            {
+                await _productPriceRepository.Create(args.Data);
+                ProductPrices = await _productPriceRepository.GetAll(Id);
+                productPriceGrid.Refresh();
+            }
+
+            if (args.Action == "Add")
+            {
+                await _productPriceRepository.Update(args.Data);
+            }
+        }
+        if (args.RequestType.Equals(Syncfusion.Blazor.Grids.Action.Save))
+        {
+            await _productPriceRepository.Delete(args.Data.Id);
+            productPriceGrid.Refresh();
+        }
     }
 }
