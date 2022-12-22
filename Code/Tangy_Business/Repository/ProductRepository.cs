@@ -42,6 +42,7 @@ namespace Tangy_Business.Repository
         public async Task<ProductDto> Get(int id)
         {
             var product = await _context.Products.Include(x => x.Category)
+                                        .Include(p => p.ProductPrices)
                                         .FirstOrDefaultAsync(x => x.Id == id);
             if (product != null)
             {
@@ -54,7 +55,8 @@ namespace Tangy_Business.Repository
         public async Task<IEnumerable<ProductDto>> GetAll()
         {
             return _mapper.Map<IEnumerable<Product>, IEnumerable<ProductDto>>(await _context.Products
-                    .Include(x => x.Category).ToListAsync());
+                    .Include(x => x.Category)
+                    .Include(p => p.ProductPrices).ToListAsync());
         }
 
         public async Task<ProductDto> Update(ProductDto productDto)

@@ -19,6 +19,8 @@ namespace Tangy_Models.Dtos
 
         public CategoryDto Category { get; set; }
 
+        public ICollection<ProductPriceDto> ProductPrices { get; set; }
+
         public ProductDto()
         {
             ImageUrl = "/images/default.png";

@@ -16,3 +16,5 @@
 /Code/Tangy_Common/bin/Debug/net6.0
 /Code/Tangy_Data/bin/Debug/net6.0
 /Code/TangyWeb_Server/wwwroot/images/products
+/Code/TangyWeb_Api/bin/Debug/net6.0
+/Code/TangyWeb_Api/obj
