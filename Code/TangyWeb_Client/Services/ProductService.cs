@@ -7,10 +7,13 @@ namespace TangyWeb_Client.Services
     public class ProductService : IProductService
     {
         private readonly HttpClient _httpClient;
-
-        public ProductService(HttpClient httpClient)
+        private readonly IConfiguration _configuration;
+        private string baseServerUrl;
+        public ProductService(HttpClient httpClient, IConfiguration configuration)
         {
             this._httpClient = httpClient;
+            this._configuration = configuration;
+            this.baseServerUrl = _configuration.GetSection("BaseServerURL").Value;
         }
         public async Task<ProductDto> Get(int productId)
         {
@@ -19,6 +22,7 @@ namespace TangyWeb_Client.Services
             if (response.IsSuccessStatusCode)
             {
                 var product = JsonConvert.DeserializeObject<ProductDto>(content);
+                product.ImageUrl = baseServerUrl + product.ImageUrl;
                 return product;
             }
             else
@@ -35,6 +39,11 @@ namespace TangyWeb_Client.Services
             {
                 var content = await response.Content.ReadAsStringAsync();
                 var products = JsonConvert.DeserializeObject<IEnumerable<ProductDto>>(content);
+                foreach (var product in products)
+                {
+                    product.ImageUrl = baseServerUrl + product.ImageUrl;
+                }
+
                 return products;
             }
 
