@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tangy_Business", "Tangy_Bus
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tangy_Data", "Tangy_Data\Tangy_Data.csproj", "{22545B93-A2E7-44BA-913C-F0689E484846}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TangyWeb_Api", "TangyWeb_Api\TangyWeb_Api.csproj", "{01547DAB-C834-4516-99EE-24DD521C166D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TangyWeb_Api", "TangyWeb_Api\TangyWeb_Api.csproj", "{01547DAB-C834-4516-99EE-24DD521C166D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

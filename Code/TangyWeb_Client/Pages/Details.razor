@@ -125,7 +125,9 @@ else
             {
                 Count = DetailsVM.Count,
                 ProductId = ProductId,
-                ProductPriceId = DetailsVM.SelectedProductPriceId
+                ProductPriceId = DetailsVM.SelectedProductPriceId,
+                Product = this.Product,
+                ProductPrice = DetailsVM.ProductPrice
             };
 
         await _cartService.IncrementCart(shoppingCart);
