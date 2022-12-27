@@ -1,5 +1,8 @@
 ﻿@page "/details/{productId:int}"
 @inject IProductService _productService
+@inject IShoppingCartService _cartService
+@inject NavigationManager _navigationManager
+@inject IJSRuntime _jsRuntime
 
 @if (IsProcessing)
 {
@@ -118,15 +121,15 @@ else
 
     private async Task AddToCart()
     {
-        //ShoppingCart shoppingCart = new()
-        //    {
-        //        Count = DetailsVM.Count,
-        //        ProductId = ProductId,
-        //        ProductPriceId = DetailsVM.SelectedProductPriceId
-        //    };
+        ShoppingCartViewModel shoppingCart = new()
+            {
+                Count = DetailsVM.Count,
+                ProductId = ProductId,
+                ProductPriceId = DetailsVM.SelectedProductPriceId
+            };
 
-        //await _cartService.IncrementCart(shoppingCart);
-        //_navigationManager.NavigateTo("/");
-        //await _jsRuntime.ToastrSuccess("Product added to cart successfully");
+        await _cartService.IncrementCart(shoppingCart);
+        _navigationManager.NavigateTo("/");
+        await _jsRuntime.ToastrSuccess("Product added to cart successfully");
     }
 }
