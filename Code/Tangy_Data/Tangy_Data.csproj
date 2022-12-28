@@ -16,4 +16,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Tangy_Common\Tangy_Common.csproj" />
+  </ItemGroup>
+
 </Project>
