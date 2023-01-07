@@ -22,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Tangy_Business\Tangy_Business.csproj" />
     <ProjectReference Include="..\Tangy_Data\Tangy_Data.csproj" />
+    <ProjectReference Include="..\Tangy_Models\Tangy_Models.csproj" />
   </ItemGroup>
 
 </Project>

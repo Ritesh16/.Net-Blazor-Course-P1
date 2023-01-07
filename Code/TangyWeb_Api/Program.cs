@@ -59,6 +59,7 @@ app.UseHttpsRedirection();
 
 app.UseCors("Tangy");
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
