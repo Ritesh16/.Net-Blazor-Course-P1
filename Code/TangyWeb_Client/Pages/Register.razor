@@ -52,17 +52,17 @@
     {
         ShowErrors = false;
 
-        await AuthService.Register(RegisterModel);
+        var registerRepsonse = await AuthService.Register(RegisterModel);
 
-        //if (result.Successful)
-        //{
+        if (registerRepsonse.Successful)
+        {
             NavigationManager.NavigateTo("/login");
-        //}
-        //else
-        //{
-        //    Errors = result.Errors;
-        //    ShowErrors = true;
-        //}
+        }
+        else
+        {
+            Errors = registerRepsonse.Errors;
+            ShowErrors = true;
+        }
     }
 
 }

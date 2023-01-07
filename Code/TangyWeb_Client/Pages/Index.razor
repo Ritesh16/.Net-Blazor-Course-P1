@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using Microsoft.AspNetCore.Components.Authorization;
 @inject IProductService _productService
 
 @if (IsProcessing)
@@ -61,4 +62,5 @@ else
         Products = await _productService.GetAll();
         IsProcessing = false;
     }
+
 }

@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Text;
 using TangyWeb_Models;
 using TangyWeb_Client.Services.Interfaces;
+using System.Reflection.Metadata;
 
 namespace TangyWeb_Client.Services
 {
@@ -24,18 +25,22 @@ namespace TangyWeb_Client.Services
             _localStorage = localStorage;
         }
 
-        public async Task Register(RegisterModel registerModel)
+        public async Task<RegisterResult> Register(RegisterModel registerModel)
         {
             var registerModelJson = JsonSerializer.Serialize(registerModel);
             var response = await _httpClient.PostAsync("api/account", new StringContent(registerModelJson, Encoding.UTF8, "application/json"));
+            var registerResponse = JsonSerializer.Deserialize<RegisterResult>(await response.Content.ReadAsStringAsync(),
+                                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
+            return registerResponse;
         }
 
         public async Task<LoginResult> Login(LoginModel loginModel)
         {
             var loginAsJson = JsonSerializer.Serialize(loginModel);
             var response = await _httpClient.PostAsync("api/Login", new StringContent(loginAsJson, Encoding.UTF8, "application/json"));
-            var loginResult = JsonSerializer.Deserialize<LoginResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var loginResult = JsonSerializer.Deserialize<LoginResult>(await response.Content.ReadAsStringAsync(), 
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             if (!response.IsSuccessStatusCode)
             {
