@@ -1,5 +1,13 @@
-﻿<a href="/login">Login</a>
-<a href="/register">Register</a>
+﻿<AuthorizeView>
+    <Authorized>
+        <a href="/logout">Logout</a>
+    </Authorized>
+    <NotAuthorized>
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
+    </NotAuthorized>
+
+</AuthorizeView>
 
 @code {
 
