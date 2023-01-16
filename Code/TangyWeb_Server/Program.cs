@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Syncfusion.Blazor;
 using Tangy_Business.Repository;
 using Tangy_Business.Repository.Interfaces;
 using Tangy_Data;
+using Tangy_Data.Entities;
 using TangyWeb_Server.Data;
 using TangyWeb_Server.Services;
 using TangyWeb_Server.Services.Interfaces;
@@ -20,9 +22,13 @@ builder.Services.AddSyncfusionBlazor();
 
 builder.Services.AddSingleton<WeatherForecastService>();
 
+builder.Services.AddDefaultIdentity<ApplicationUser>()
+      .AddEntityFrameworkStores<AppDbContext>();
+
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductPriceRepository, ProductPriceRepository>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IFileUpload, FileUpload>();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

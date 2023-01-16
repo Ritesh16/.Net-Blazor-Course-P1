@@ -7,6 +7,7 @@ using System.Text;
 using TangyWeb_Models;
 using TangyWeb_Client.Services.Interfaces;
 using System.Reflection.Metadata;
+using Tangy_Models.Dtos;
 
 namespace TangyWeb_Client.Services
 {
@@ -25,11 +26,11 @@ namespace TangyWeb_Client.Services
             _localStorage = localStorage;
         }
 
-        public async Task<RegisterResult> Register(RegisterModel registerModel)
+        public async Task<OutputDto> Register(RegisterDto registerModel)
         {
             var registerModelJson = JsonSerializer.Serialize(registerModel);
             var response = await _httpClient.PostAsync("api/account", new StringContent(registerModelJson, Encoding.UTF8, "application/json"));
-            var registerResponse = JsonSerializer.Deserialize<RegisterResult>(await response.Content.ReadAsStringAsync(),
+            var registerResponse = JsonSerializer.Deserialize<OutputDto>(await response.Content.ReadAsStringAsync(),
                                     new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             return registerResponse;

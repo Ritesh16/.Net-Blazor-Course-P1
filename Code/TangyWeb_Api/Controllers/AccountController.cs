@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Tangy_Models.Dtos;
 using TangyWeb_Models;
 
 namespace TangyWeb_Api.Controllers
@@ -18,7 +19,7 @@ namespace TangyWeb_Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] RegisterModel model)
+        public async Task<IActionResult> Post([FromBody] RegisterDto model)
         {
             var newUser = new IdentityUser { UserName = model.Email, Email = model.Email };
 
@@ -28,11 +29,11 @@ namespace TangyWeb_Api.Controllers
             {
                 var errors = result.Errors.Select(x => x.Description);
 
-                return Ok(new RegisterResult { Successful = false, Errors = errors });
+                return Ok(new OutputDto { Successful = false, Errors = errors });
 
             }
 
-            return Ok(new RegisterResult { Successful = true });
+            return Ok(new OutputDto { Successful = true });
         }
     }
 }

@@ -1,9 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TangyWeb_Models
+namespace Tangy_Models.Dtos
 {
-    public class RegisterModel
+    public class RegisterDto
     {
+        [Required]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; }
+
+        [Required]
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; }
+
+
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
@@ -15,6 +24,7 @@ namespace TangyWeb_Models
         [Display(Name = "Password")]
         public string Password { get; set; }
 
+        [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
