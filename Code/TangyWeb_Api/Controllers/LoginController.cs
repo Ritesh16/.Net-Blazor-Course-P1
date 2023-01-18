@@ -5,7 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using TangyWeb_Models;
+using Tangy_Models.Dtos;
 
 namespace TangyWeb_Api.Controllers
 {
@@ -24,11 +24,11 @@ namespace TangyWeb_Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] LoginModel login)
+        public async Task<IActionResult> Login([FromBody] LoginDto login)
         {
             var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, false, false);
 
-            if (!result.Succeeded) return BadRequest(new LoginResult { Successful = false, Error = "Username and password are invalid." });
+            if (!result.Succeeded) return BadRequest(new LoginResultDto { Successful = false, Error = "Username and password are invalid." });
 
             var claims = new[]
             {
@@ -47,7 +47,7 @@ namespace TangyWeb_Api.Controllers
                 signingCredentials: creds
             );
 
-            return Ok(new LoginResult { Successful = true, Token = new JwtSecurityTokenHandler().WriteToken(token) });
+            return Ok(new LoginResultDto { Successful = true, Token = new JwtSecurityTokenHandler().WriteToken(token) });
         }
     }
 }

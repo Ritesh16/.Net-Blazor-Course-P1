@@ -1,15 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TangyWeb_Models
+namespace Tangy_Models.Dtos
 {
-    public class LoginModel
+    public class LoginDto
     {
         [Required]
         public string Email { get; set; }
 
         [Required]
         public string Password { get; set; }
-
-        public bool RememberMe { get; set; }
     }
 }

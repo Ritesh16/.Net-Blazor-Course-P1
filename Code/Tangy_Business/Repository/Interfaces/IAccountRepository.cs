@@ -5,5 +5,6 @@ namespace Tangy_Business.Repository.Interfaces
     public interface IAccountRepository
     {
         Task<OutputDto> Register(RegisterDto model);
+        Task<LoginResultDto> Login(LoginDto model);
     }
 }

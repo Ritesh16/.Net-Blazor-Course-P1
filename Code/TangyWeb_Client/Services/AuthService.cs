@@ -4,7 +4,6 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text;
-using TangyWeb_Models;
 using TangyWeb_Client.Services.Interfaces;
 using System.Reflection.Metadata;
 using Tangy_Models.Dtos;
@@ -36,11 +35,11 @@ namespace TangyWeb_Client.Services
             return registerResponse;
         }
 
-        public async Task<LoginResult> Login(LoginModel loginModel)
+        public async Task<LoginResultDto> Login(LoginDto loginModel)
         {
             var loginAsJson = JsonSerializer.Serialize(loginModel);
             var response = await _httpClient.PostAsync("api/Login", new StringContent(loginAsJson, Encoding.UTF8, "application/json"));
-            var loginResult = JsonSerializer.Deserialize<LoginResult>(await response.Content.ReadAsStringAsync(), 
+            var loginResult = JsonSerializer.Deserialize<LoginResultDto>(await response.Content.ReadAsStringAsync(), 
                     new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             if (!response.IsSuccessStatusCode)

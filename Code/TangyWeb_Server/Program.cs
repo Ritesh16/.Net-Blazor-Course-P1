@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
@@ -22,16 +23,22 @@ builder.Services.AddSyncfusionBlazor();
 
 builder.Services.AddSingleton<WeatherForecastService>();
 
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 builder.Services.AddDefaultIdentity<ApplicationUser>()
-      .AddEntityFrameworkStores<AppDbContext>();
+      .AddEntityFrameworkStores<AppDbContext>()
+      .AddDefaultTokenProviders();
+
+builder.Services.AddScoped<SignInManager<IdentityUser>>();
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductPriceRepository, ProductPriceRepository>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IFileUpload, FileUpload>();
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());    
 var app = builder.Build();
@@ -51,8 +58,11 @@ else
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
-
 app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");

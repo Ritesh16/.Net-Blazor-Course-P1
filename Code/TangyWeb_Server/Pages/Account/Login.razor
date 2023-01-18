@@ -1,7 +1,86 @@
 ﻿@page "/login"
+@inject IAuthService _authService
+@inject NavigationManager _navigationManager
 
 <h3>Login</h3>
 
+@if (showErrors)
+{
+    <div class="alert alert-danger" role="alert">
+        @foreach (var error in Output.Errors)
+        {
+            <p>@error</p>
+        }
+    </div>
+}
+
+@if (Output.Successful)
+{
+    <div class="alert alert-success" role="alert">
+        @Output.Message
+    </div>
+}
+
+<div class="row my-2">
+    <div class="col-10">
+        @if (IsLoading)
+        {
+            <div style="text-align:center">
+                <img src="images/loading.gif" />
+            </div>
+        }
+        else
+        {
+            <EditForm Model="LoginModel" OnValidSubmit="OnLogin">
+                <DataAnnotationsValidator />
+                <div class="form-group">
+                    <label>Email</label>
+                    <InputText @bind-Value="LoginModel.Email" class="form-control"></InputText>
+                    <ValidationMessage For="()=>LoginModel.Email"></ValidationMessage>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <InputText @bind-Value="LoginModel.Password" class="form-control" type="password"></InputText>
+                    <ValidationMessage For="()=>LoginModel.Password"></ValidationMessage>
+                </div>
+           
+                <div class="form-group py-2">
+                    <button class="btn btn-primary">Login</button>
+                    <NavLink href="/login" class="btn btn-secondary">Cancel</NavLink>
+                </div>
+
+            </EditForm>
+
+        }
+    </div>
+</div>
+
+
 @code {
+    private LoginDto LoginModel { get; set; } = new();
+    private OutputDto Output { get; set; } = new();
+    private bool IsLoading { get; set; }
+
+    private bool showErrors = false;
+
+    private async Task OnLogin()
+    {
+        IsLoading = true;
+
+        var output = await _authService.Login(LoginModel);
+
+        if (Output.Successful)
+        {
+            showErrors = false;
+            LoginModel = new LoginDto();
+            _navigationManager.NavigateTo("/Product");
+        }
+        else
+        {
+            showErrors = true;
+        }
+
+        IsLoading = false;
+    }
 
 }

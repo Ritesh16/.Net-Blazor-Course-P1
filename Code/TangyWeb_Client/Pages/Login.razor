@@ -1,5 +1,4 @@
 ﻿@page "/login"
-@using TangyWeb_Models;
 @inject IAuthService AuthService
 @inject NavigationManager NavigationManager
 
@@ -36,7 +35,7 @@
 
 @code {
 
-    private LoginModel loginModel = new LoginModel();
+    private LoginDto loginModel = new LoginDto();
     private bool ShowErrors;
     private string Error = "";
 

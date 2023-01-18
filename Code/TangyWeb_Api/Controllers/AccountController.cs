@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Tangy_Models.Dtos;
-using TangyWeb_Models;
 
 namespace TangyWeb_Api.Controllers
 {
