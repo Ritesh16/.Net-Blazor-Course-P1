@@ -30,7 +30,6 @@ builder.Services.AddDefaultIdentity<ApplicationUser>()
       .AddEntityFrameworkStores<AppDbContext>()
       .AddDefaultTokenProviders();
 
-builder.Services.AddScoped<SignInManager<IdentityUser>>();
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
