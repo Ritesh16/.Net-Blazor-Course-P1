@@ -1,6 +1,12 @@
 ﻿@page "/login"
+@using Microsoft.AspNetCore.Identity;
+@using Tangy_Data.Entities;
 @inject IAuthService _authService
 @inject NavigationManager _navigationManager
+
+@inject SignInManager<ApplicationUser> SignInMgr
+@inject UserManager<ApplicationUser> UserMgr
+
 
 <h3>Login</h3>
 
@@ -69,7 +75,7 @@
 
         var output = await _authService.Login(LoginModel);
 
-        if (Output.Successful)
+        if (output.Successful)
         {
             showErrors = false;
             LoginModel = new LoginDto();
@@ -81,6 +87,10 @@
         }
 
         IsLoading = false;
+
+        
     }
+
+
 
 }

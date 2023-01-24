@@ -1,5 +1,6 @@
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ using Tangy_Business.Repository;
 using Tangy_Business.Repository.Interfaces;
 using Tangy_Data;
 using Tangy_Data.Entities;
+using TangyWeb_Server;
 using TangyWeb_Server.Data;
 using TangyWeb_Server.Services;
 using TangyWeb_Server.Services.Interfaces;
@@ -37,6 +39,7 @@ builder.Services.AddScoped<IProductPriceRepository, ProductPriceRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IFileUpload, FileUpload>();
+builder.Services.AddScoped<AuthenticationStateProvider, AppStateProvider>();
 builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());    
