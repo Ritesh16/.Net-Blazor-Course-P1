@@ -18,7 +18,7 @@ namespace TangyWeb_Server.Services
         private readonly AuthenticationStateProvider _authenticationStateProvider;
 
         public AuthService(ILocalStorageService localStorage, IAccountRepository accountRepository,
-            UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, 
+            UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
             AuthenticationStateProvider authenticationStateProvider)
         {
             _localStorage = localStorage;
@@ -29,38 +29,43 @@ namespace TangyWeb_Server.Services
         }
         public async Task<LoginResultDto> Login(LoginDto loginDto)
         {
-
-            var usr = await _userManager.FindByEmailAsync(loginDto.Email);
-            if (usr == null)
+            var user = await _userManager.FindByEmailAsync(loginDto.Email);
+            var loginResultDto = new LoginResultDto();
+            if (user == null)
             {
-                throw new Exception("User not found!");
+                loginResultDto.Error = "User not found!";
+                return loginResultDto;
             }
 
-            var loginResultDto = new LoginResultDto();
-
-            if (await _signInManager.CanSignInAsync(usr))
+            if (await _signInManager.CanSignInAsync(user))
             {
-                var result = await _signInManager.CheckPasswordSignInAsync(usr, loginDto.Password, true);
+                var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, true);
                 if (result.Succeeded)
                 {
                     loginResultDto.Successful = true;
-                    loginResultDto.Name = usr.FirstName + " " + usr.LastName;
+                    loginResultDto.Name = user.FirstName + " " + user.LastName;
 
                     await _localStorage.SetItemAsync("userName", loginResultDto.Name);
-                    ((AppStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(loginResultDto.Name);
+                    ((AppStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(loginResultDto.Name, loginDto.Email);
 
                 }
                 else
                 {
-                    //Model.Error = "Login failed. Check your username and password.";
+                    loginResultDto.Error = "Login failed. Check your username and password.";
                 }
             }
             else
             {
-                //Model.Error = "Your account is blocked";
+                loginResultDto.Error = "Your account is blocked";
             }
 
             return loginResultDto;
+        }
+
+        public async Task<string> GetUserName()
+        {
+            var name = await _localStorage.GetItemAsStringAsync("userName");
+            return name;
         }
     }
 }

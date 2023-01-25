@@ -21,26 +21,35 @@ namespace Tangy_Business.Repository
         {
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, lockoutOnFailure: false);
-            var output = new LoginResultDto();
-            if (result.Succeeded)
+            try
             {
-                var appUser = _userManager.Users.FirstOrDefault(x => x.Email == model.Email);
-                output.Successful = true;
-                output.Name = appUser.FirstName + " " + appUser.LastName;
-            }
+                var ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, lockoutOnFailure: false);
+                var output = new LoginResultDto();
+                if (result.Succeeded)
+                {
+                    var appUser = _userManager.Users.FirstOrDefault(x => x.Email == model.Email);
+                    output.Successful = true;
+                    output.Name = appUser.FirstName + " " + appUser.LastName;
+                }
 
-            if (result.IsLockedOut)
-            {
-                output.Successful = false;
-                output.Error = "Account is locked out.";
-            }
-            else
-            {
-                output.Error = "Email/Password does not match.";
-            }
+                if (result.IsLockedOut)
+                {
+                    output.Successful = false;
+                    output.Error = "Account is locked out.";
+                }
+                else
+                {
+                    output.Error = "Email/Password does not match.";
+                }
 
-            return output;
+                return output;
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<OutputDto> Register(RegisterDto model)

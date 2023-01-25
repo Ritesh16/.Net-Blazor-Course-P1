@@ -7,26 +7,32 @@ namespace TangyWeb_Server
     public class AppStateProvider : AuthenticationStateProvider
     {
         private readonly ILocalStorageService _localStorage;
-        
+
         public AppStateProvider(ILocalStorageService localStorage)
         {
             _localStorage = localStorage;
         }
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            //var userName = await _localStorage.GetItemAsync<string>("userName");
+            //return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
+            var userName = await _localStorage.GetItemAsync<string>("userName");
+            var email = "test@gmail.com";
 
-            //if (string.IsNullOrWhiteSpace(userName))
-            //{
+            if (string.IsNullOrWhiteSpace(userName))
+            {
                 return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
-            //}
+            }
 
-            //return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity("userName", userName, "")));
+            
+            return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, userName, "name"),
+                new Claim(ClaimTypes.Email, email, "email") }, "name")));
         }
 
-        public void MarkUserAsAuthenticated(string userName)
+        public void MarkUserAsAuthenticated(string userName, String email)
         {
-            var authenticatedUser = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, userName) }, "userName"));
+            var authenticatedUser = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, userName, "name"),
+                new Claim(ClaimTypes.Email, email, "email") }, "name"));
+
             var authState = Task.FromResult(new AuthenticationState(authenticatedUser));
             NotifyAuthenticationStateChanged(authState);
         }
