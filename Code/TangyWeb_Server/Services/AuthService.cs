@@ -45,7 +45,7 @@ namespace TangyWeb_Server.Services
                     loginResultDto.Successful = true;
                     loginResultDto.Name = user.FirstName + " " + user.LastName;
 
-                    await _localStorage.SetItemAsync("userName", loginResultDto.Name);
+                    await _localStorage.SetItemAsync<UserInfoDto>("userName", new UserInfoDto(loginResultDto.Name, loginDto.Email));
                     ((AppStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(loginResultDto.Name, loginDto.Email);
 
                 }

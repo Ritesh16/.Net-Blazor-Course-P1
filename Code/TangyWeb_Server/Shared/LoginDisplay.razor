@@ -2,7 +2,7 @@
 
 <AuthorizeView>
     <Authorized>
-        <a>@UserName</a>
+        <a>@context.User.Identity.Name</a>
         <a href="/logout">Logout</a>
     </Authorized>
     <NotAuthorized>
@@ -13,23 +13,5 @@
 </AuthorizeView>
 
 @code {
-    [CascadingParameter]
-    public Task<AuthenticationState> AuthenticationState { get; set; }
 
-    public string UserName { get; set; }
-
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if(firstRender)
-        {
-            var authState = await AuthenticationState;
-            if (authState.User.Identity.IsAuthenticated)
-            {
-                UserName = authState.User.Identity.Name;
-            }
-
-            StateHasChanged();
-        }
-    }
 }
