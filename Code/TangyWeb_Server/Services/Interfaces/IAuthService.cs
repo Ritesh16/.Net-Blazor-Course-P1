@@ -6,5 +6,6 @@ namespace TangyWeb_Server.Services.Interfaces
     {
         Task<LoginResultDto> Login(LoginDto loginDto);
         Task<string> GetUserName();
+        Task Logout();
     }
 }

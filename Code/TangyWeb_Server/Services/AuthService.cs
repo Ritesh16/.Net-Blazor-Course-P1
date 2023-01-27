@@ -67,5 +67,11 @@ namespace TangyWeb_Server.Services
             var name = await _localStorage.GetItemAsStringAsync("userName");
             return name;
         }
+
+        public async Task Logout()
+        {
+            await _localStorage.RemoveItemAsync("userName");
+            ((AppStateProvider)_authenticationStateProvider).MarkUserAsLoggedOut();
+        }
     }
 }
