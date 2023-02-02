@@ -16,50 +16,62 @@ namespace TangyWeb_Server.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly AuthenticationStateProvider _authenticationStateProvider;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public AuthService(ILocalStorageService localStorage, IAccountRepository accountRepository,
             UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
-            AuthenticationStateProvider authenticationStateProvider)
+            AuthenticationStateProvider authenticationStateProvider,
+            RoleManager<IdentityRole> roleManager)
         {
             _localStorage = localStorage;
             _accountRepository = accountRepository;
             _userManager = userManager;
             _signInManager = signInManager;
             _authenticationStateProvider = authenticationStateProvider;
+            _roleManager = roleManager;
         }
         public async Task<LoginResultDto> Login(LoginDto loginDto)
         {
-            var user = await _userManager.FindByEmailAsync(loginDto.Email);
-            var loginResultDto = new LoginResultDto();
-            if (user == null)
+
+            var loginResult = await _accountRepository.Login(loginDto);
+
+            if (loginResult.Successful)
             {
-                loginResultDto.Error = "User not found!";
-                return loginResultDto;
+                await _localStorage.SetItemAsync<UserInfoDto>("userName", new UserInfoDto(loginResult.Name, loginDto.Email));
+                ((AppStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(loginResult.Name, loginDto.Email);
             }
 
-            if (await _signInManager.CanSignInAsync(user))
-            {
-                var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, true);
-                if (result.Succeeded)
-                {
-                    loginResultDto.Successful = true;
-                    loginResultDto.Name = user.FirstName + " " + user.LastName;
+            //var user = await _userManager.FindByEmailAsync(loginDto.Email);
+            //var loginResultDto = new LoginResultDto();
+            //if (user == null)
+            //{
+            //    loginResultDto.Error = "User not found!";
+            //    return loginResultDto;
+            //}
 
-                    await _localStorage.SetItemAsync<UserInfoDto>("userName", new UserInfoDto(loginResultDto.Name, loginDto.Email));
-                    ((AppStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(loginResultDto.Name, loginDto.Email);
+            //if (await _signInManager.CanSignInAsync(user))
+            //{
+            //    var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, true);
+            //    if (result.Succeeded)
+            //    {
+            //        loginResultDto.Successful = true;
+            //        loginResultDto.Name = user.FirstName + " " + user.LastName;
 
-                }
-                else
-                {
-                    loginResultDto.Error = "Login failed. Check your username and password.";
-                }
-            }
-            else
-            {
-                loginResultDto.Error = "Your account is blocked";
-            }
+            //        await _localStorage.SetItemAsync<UserInfoDto>("userName", new UserInfoDto(loginResultDto.Name, loginDto.Email));
+            //        ((AppStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(loginResultDto.Name, loginDto.Email);
 
-            return loginResultDto;
+            //    }
+            //    else
+            //    {
+            //        loginResultDto.Error = "Login failed. Check your username and password.";
+            //    }
+            //}
+            //else
+            //{
+            //    loginResultDto.Error = "Your account is blocked";
+            //}
+
+            return loginResult;
         }
 
         public async Task<string> GetUserName()

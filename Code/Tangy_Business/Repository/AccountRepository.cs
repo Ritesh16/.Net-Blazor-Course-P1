@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.VisualBasic;
 using System;
 using Tangy_Business.Repository.Interfaces;
 using Tangy_Data.Entities;
 using Tangy_Models.Dtos;
+using Tangy_Common;
 
 namespace Tangy_Business.Repository
 {
@@ -10,46 +13,45 @@ namespace Tangy_Business.Repository
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-
-        public AccountRepository(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        private readonly RoleManager<IdentityRole> _roleManager;
+        public AccountRepository(UserManager<ApplicationUser> userManager,
+                        SignInManager<ApplicationUser> signInManager, 
+                        RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager; 
         }
 
         public async Task<LoginResultDto> Login(LoginDto model)
         {
-            // This doesn't count login failures towards account lockout
-            // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-            try
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            var loginResultDto = new LoginResultDto();
+            if (user == null)
             {
-                var ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, lockoutOnFailure: false);
-                var output = new LoginResultDto();
+                loginResultDto.Error = "User not found!";
+                return loginResultDto;
+            }
+
+            if (await _signInManager.CanSignInAsync(user))
+            {
+                var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, true);
                 if (result.Succeeded)
                 {
-                    var appUser = _userManager.Users.FirstOrDefault(x => x.Email == model.Email);
-                    output.Successful = true;
-                    output.Name = appUser.FirstName + " " + appUser.LastName;
-                }
-
-                if (result.IsLockedOut)
-                {
-                    output.Successful = false;
-                    output.Error = "Account is locked out.";
+                    loginResultDto.Successful = true;
+                    loginResultDto.Name = user.FirstName + " " + user.LastName;
                 }
                 else
                 {
-                    output.Error = "Email/Password does not match.";
+                    loginResultDto.Error = "Login failed. Check your username and password.";
                 }
-
-                return output;
-
             }
-            catch (Exception ex)
+            else
             {
-                throw ex;
+                loginResultDto.Error = "Your account is blocked";
             }
+
+            return loginResultDto;
         }
 
         public async Task<OutputDto> Register(RegisterDto model)
@@ -72,6 +74,14 @@ namespace Tangy_Business.Repository
                 return new OutputDto { Successful = false, Errors = errors };
 
             }
+
+            if(!await _roleManager.RoleExistsAsync(Tangy_Common.Constants.Role_Admin))
+            {
+                await _roleManager.CreateAsync(new IdentityRole(Tangy_Common.Constants.Role_Admin));
+                await _roleManager.CreateAsync(new IdentityRole(Tangy_Common.Constants.Role_Customer));
+            }
+
+            await _userManager.AddToRoleAsync(user, Tangy_Common.Constants.Role_Admin);
 
             return new OutputDto { Successful = true, Message = "Your account is created successfully." };
         }

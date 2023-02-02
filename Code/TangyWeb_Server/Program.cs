@@ -28,9 +28,14 @@ builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddDefaultIdentity<ApplicationUser>()
-      .AddEntityFrameworkStores<AppDbContext>()
-      .AddDefaultTokenProviders();
+//builder.Services.AddDefaultIdentity<ApplicationUser>()
+//      .AddEntityFrameworkStores<AppDbContext>()
+//      .AddDefaultTokenProviders();
+
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddDefaultTokenProviders()
+    .AddDefaultUI()
+    .AddEntityFrameworkStores<AppDbContext>();
 
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
@@ -40,6 +45,8 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IFileUpload, FileUpload>();
 builder.Services.AddScoped<AuthenticationStateProvider, AppStateProvider>();
+builder.Services.AddScoped<IDbInitializer, DbInitializer>();
+
 builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());    
@@ -62,6 +69,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
+SeedDatabase();
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -70,3 +78,12 @@ app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
 app.Run();
+
+void SeedDatabase()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+        dbInitializer.Initialize();
+    }
+}
