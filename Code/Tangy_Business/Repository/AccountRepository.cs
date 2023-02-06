@@ -39,7 +39,7 @@ namespace Tangy_Business.Repository
                 if (result.Succeeded)
                 {
                     loginResultDto.Successful = true;
-                    loginResultDto.Name = user.FirstName + " " + user.LastName;
+                    loginResultDto.User.Name = user.FirstName + " " + user.LastName;
                 }
                 else
                 {
@@ -62,7 +62,8 @@ namespace Tangy_Business.Repository
                 Email = model.Email,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                PhoneNumber = model.PhoneNumber
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
@@ -75,13 +76,7 @@ namespace Tangy_Business.Repository
 
             }
 
-            if(!await _roleManager.RoleExistsAsync(Tangy_Common.Constants.Role_Admin))
-            {
-                await _roleManager.CreateAsync(new IdentityRole(Tangy_Common.Constants.Role_Admin));
-                await _roleManager.CreateAsync(new IdentityRole(Tangy_Common.Constants.Role_Customer));
-            }
-
-            await _userManager.AddToRoleAsync(user, Tangy_Common.Constants.Role_Admin);
+            await _userManager.AddToRoleAsync(user, Tangy_Common.Constants.Role_Customer);
 
             return new OutputDto { Successful = true, Message = "Your account is created successfully." };
         }

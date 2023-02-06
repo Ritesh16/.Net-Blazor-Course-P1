@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Tangy_Business.Repository.Interfaces;
+using Tangy_Data.Entities;
 using Tangy_Models.Dtos;
 
 namespace TangyWeb_Api.Controllers
@@ -9,30 +11,30 @@ namespace TangyWeb_Api.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
+        private readonly IAccountRepository _accountRepository;
 
-        private readonly UserManager<IdentityUser> _userManager;
-
-        public AccountController(UserManager<IdentityUser> userManager)
+        public AccountController(IAccountRepository accountRepository)
         {
-            _userManager = userManager;
+            _accountRepository = accountRepository;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] RegisterDto model)
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register([FromBody] RegisterDto model)
         {
-            var newUser = new IdentityUser { UserName = model.Email, Email = model.Email };
+            var output = await _accountRepository.Register(model);
+            return Ok(output);
+        }
 
-            var result = await _userManager.CreateAsync(newUser, model.Password);
-
-            if (!result.Succeeded)
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login([FromBody] LoginDto model)
+        {
+            var output = await _accountRepository.Login(model);
+            if (!output.Successful)
             {
-                var errors = result.Errors.Select(x => x.Description);
-
-                return Ok(new OutputDto { Successful = false, Errors = errors });
-
+                return Unauthorized(output);
             }
 
-            return Ok(new OutputDto { Successful = true });
+            return Ok(output);
         }
     }
 }

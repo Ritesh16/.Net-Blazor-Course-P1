@@ -5,6 +5,10 @@
         public string Name { get; set; }
         public string Email { get; set; }
 
+        public UserInfoDto()
+        {
+
+        }
         public UserInfoDto(string name, string email)
         {
             Name = name;

@@ -37,8 +37,8 @@ namespace TangyWeb_Server.Services
 
             if (loginResult.Successful)
             {
-                await _localStorage.SetItemAsync<UserInfoDto>("userName", new UserInfoDto(loginResult.Name, loginDto.Email));
-                ((AppStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(loginResult.Name, loginDto.Email);
+                await _localStorage.SetItemAsync<UserInfoDto>("userName", new UserInfoDto(loginResult.User.Name, loginDto.Email));
+                ((AppStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(loginResult.User.Name, loginDto.Email);
             }
 
             //var user = await _userManager.FindByEmailAsync(loginDto.Email);
