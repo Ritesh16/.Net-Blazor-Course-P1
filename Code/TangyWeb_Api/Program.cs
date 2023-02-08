@@ -7,6 +7,7 @@ using Tangy_Business.Repository;
 using Tangy_Business.Repository.Interfaces;
 using Tangy_Data;
 using Tangy_Data.Entities;
+using TangyWeb_Api.Helper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +37,12 @@ builder.Services.AddCors(o => o.AddPolicy("Tangy", builder =>
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+
+var apiSettingsSection = builder.Configuration.GetSection("APISettings");
+builder.Services.Configure<APISettings>(apiSettingsSection);
+
+var apiSettings = apiSettingsSection.Get<APISettings>();
+//var key = Encoding.ASCII.GetBytes(apiSettings.SecretKey);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>

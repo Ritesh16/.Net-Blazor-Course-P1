@@ -23,6 +23,12 @@ namespace Tangy_Business.Repository
             _roleManager = roleManager; 
         }
 
+        public async Task<IList<string>> GetUserRoles(string email)
+        {
+            var roles = await _userManager.GetRolesAsync(await _userManager.FindByEmailAsync(email));
+            return roles;
+        }
+
         public async Task<LoginResultDto> Login(LoginDto model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
@@ -40,6 +46,7 @@ namespace Tangy_Business.Repository
                 {
                     loginResultDto.Successful = true;
                     loginResultDto.User.Name = user.FirstName + " " + user.LastName;
+                    loginResultDto.User.Email = user.Email;
                 }
                 else
                 {

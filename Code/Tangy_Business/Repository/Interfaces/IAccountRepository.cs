@@ -6,5 +6,6 @@ namespace Tangy_Business.Repository.Interfaces
     {
         Task<OutputDto> Register(RegisterDto model);
         Task<LoginResultDto> Login(LoginDto model);
+        Task<IList<string>> GetUserRoles(string email);
     }
 }
