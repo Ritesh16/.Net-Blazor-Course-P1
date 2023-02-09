@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Tangy_Data.Entities;
 using Tangy_Models.Dtos;
 
 namespace TangyWeb_Api.Controllers
@@ -14,10 +15,10 @@ namespace TangyWeb_Api.Controllers
     public class LoginController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
         public LoginController(IConfiguration configuration,
-                               SignInManager<IdentityUser> signInManager)
+                               SignInManager<ApplicationUser> signInManager)
         {
             _configuration = configuration;
             _signInManager = signInManager;
