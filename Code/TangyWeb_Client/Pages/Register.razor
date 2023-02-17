@@ -5,54 +5,78 @@
 
 <h1>Register</h1>
 
-@if (ShowErrors)
-{
-    <div class="alert alert-danger" role="alert">
-        @foreach (var error in Errors)
-        {
-            <p>@error</p>
-        }
-    </div>
-}
+<EditForm Model="registerModel" OnValidSubmit="SignUp" class="pt-4">
+    <DataAnnotationsValidator />
+    <div class="py-4">
+        <div class=" row form-group ">
+            <div class="col-6 offset-3 ">
+                <div class="card border">
+                    <div class="card-body px-lg-5 pt-4">
+                        <h3 class="col-12 text-success text-center py-2">
+                            <strong>Sign Up</strong>
+                        </h3>
+                        @if (ShowErrors)
+                        {
+                            <div class="alert alert-danger" role="alert">
+                                @foreach (var error in Errors)
+                                {
+                                    <p>@error</p>
+                                }
+                            </div>
+                        }
 
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">Please enter your details</h5>
-        <EditForm Model="RegisterModel" OnValidSubmit="HandleRegistration">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
-
-            <div class="form-group">
-                <label for="email">Email address</label>
-                <InputText Id="email" class="form-control" @bind-Value="RegisterModel.Email" />
-                <ValidationMessage For="@(() => RegisterModel.Email)" />
+                        <div class="py-2">
+                            <InputText @bind-Value="registerModel.FirstName" class="form-control" placeholder="First Name..." />
+                            <ValidationMessage For="(()=>registerModel.FirstName)" />
+                        </div>
+                        <div class="py-2">
+                            <InputText @bind-Value="registerModel.LastName" class="form-control" placeholder="Last Name..." />
+                            <ValidationMessage For="(()=>registerModel.LastName)" />
+                        </div>
+                        <div class="py-2">
+                            <InputText @bind-Value="registerModel.Email" type="text" class="form-control" placeholder="Email..." />
+                            <ValidationMessage For="(()=>registerModel.Email)" />
+                        </div>
+                        <div class="py-2 input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"> +1</span>
+                            </div>
+                            <InputText @bind-Value="registerModel.PhoneNumber" type="text" class="form-control" placeholder="Phone number..." />
+                            <ValidationMessage For="(()=>registerModel.PhoneNumber)" />
+                        </div>
+                        <div class="form-row py-2">
+                            <div class="col">
+                                <InputText @bind-Value="registerModel.Password" type="password" id="password" placeholder="Password..." class="form-control" />
+                                <ValidationMessage For="(()=>registerModel.Password)" />
+                            </div>
+                            <div class="col py-2">
+                                <InputText @bind-Value="registerModel.ConfirmPassword" type="password" id="confirm" class="form-control" placeholder="Confirm Password..." />
+                                <ValidationMessage For="(()=>registerModel.ConfirmPassword)" />
+                            </div>
+                        </div>
+                        <hr style="background-color:aliceblue" />
+                        <div class="py-2">
+                            <button type="submit" class="btn btn-success btn-block"><i class="bi bi-person-plus-fill"></i> Register</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <InputText Id="password" type="password" class="form-control" @bind-Value="RegisterModel.Password" />
-                <ValidationMessage For="@(() => RegisterModel.Password)" />
-            </div>
-            <div class="form-group">
-                <label for="password">Confirm Password</label>
-                <InputText Id="password" type="password" class="form-control" @bind-Value="RegisterModel.ConfirmPassword" />
-                <ValidationMessage For="@(() => RegisterModel.ConfirmPassword)" />
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </EditForm>
+        </div>
     </div>
-</div>
+</EditForm>
+
 
 @code {
 
-    private RegisterDto RegisterModel = new RegisterDto();
+    private RegisterDto registerModel = new RegisterDto();
     private bool ShowErrors;
     private IEnumerable<string> Errors;
 
-    private async Task HandleRegistration()
+    private async Task SignUp()
     {
         ShowErrors = false;
 
-        var registerRepsonse = await AuthService.Register(RegisterModel);
+        var registerRepsonse = await AuthService.Register(registerModel);
 
         if (registerRepsonse.Successful)
         {

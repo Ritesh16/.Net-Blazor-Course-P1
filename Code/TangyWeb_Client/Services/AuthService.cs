@@ -7,6 +7,7 @@ using System.Text;
 using TangyWeb_Client.Services.Interfaces;
 using System.Reflection.Metadata;
 using Tangy_Models.Dtos;
+using Tangy_Common;
 
 namespace TangyWeb_Client.Services
 {
@@ -28,7 +29,7 @@ namespace TangyWeb_Client.Services
         public async Task<OutputDto> Register(RegisterDto registerModel)
         {
             var registerModelJson = JsonSerializer.Serialize(registerModel);
-            var response = await _httpClient.PostAsync("api/account", new StringContent(registerModelJson, Encoding.UTF8, "application/json"));
+            var response = await _httpClient.PostAsync("api/account/register", new StringContent(registerModelJson, Encoding.UTF8, "application/json"));
             var registerResponse = JsonSerializer.Deserialize<OutputDto>(await response.Content.ReadAsStringAsync(),
                                     new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
@@ -38,7 +39,7 @@ namespace TangyWeb_Client.Services
         public async Task<LoginResultDto> Login(LoginDto loginModel)
         {
             var loginAsJson = JsonSerializer.Serialize(loginModel);
-            var response = await _httpClient.PostAsync("api/Login", new StringContent(loginAsJson, Encoding.UTF8, "application/json"));
+            var response = await _httpClient.PostAsync("api/account/Login", new StringContent(loginAsJson, Encoding.UTF8, "application/json"));
             var loginResult = JsonSerializer.Deserialize<LoginResultDto>(await response.Content.ReadAsStringAsync(), 
                     new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
@@ -47,8 +48,9 @@ namespace TangyWeb_Client.Services
                 return loginResult;
             }
 
-            await _localStorage.SetItemAsync("authToken", loginResult.Token);
-            ((AuthStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(loginModel.Email);
+            await _localStorage.SetItemAsync(Constants.AuthToken, loginResult.Token);
+            await _localStorage.SetItemAsync(Constants.UserDetails, loginResult.User);
+            ((AuthStateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(loginResult.Token);
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", loginResult.Token);
 
             return loginResult;
@@ -56,7 +58,8 @@ namespace TangyWeb_Client.Services
 
         public async Task Logout()
         {
-            await _localStorage.RemoveItemAsync("authToken");
+            await _localStorage.RemoveItemAsync(Constants.AuthToken);
+            await _localStorage.RemoveItemAsync(Constants.UserDetails);
             ((AuthStateProvider)_authenticationStateProvider).MarkUserAsLoggedOut();
             _httpClient.DefaultRequestHeaders.Authorization = null;
         }
