@@ -1,7 +1,7 @@
 ﻿@page "/summary"
 
 @inject ILocalStorageService _localStorageService
-
+@attribute [Authorize]
 <h3>Summary</h3>
 
 @if (IsProcessing)
@@ -137,10 +137,19 @@ else
             Order.OrderHeader.OrderTotal += (item.Count * item.ProductPrice.Price);
         }
 
+        var userDetails = await _localStorageService.GetItemAsync<UserInfoDto>(Constants.UserDetails);
+        if (userDetails != null)
+        {
+            Order.OrderHeader.UserId = userDetails.Email;
+            Order.OrderHeader.Name = userDetails.Name;
+            Order.OrderHeader.Email = userDetails.Email;
+            Order.OrderHeader.PhoneNumber = userDetails.PhoneNumber;
+        }
+
         IsProcessing = false;
     }
 
     private async Task HandleCheckout()
     {
     }
-  }
+}
