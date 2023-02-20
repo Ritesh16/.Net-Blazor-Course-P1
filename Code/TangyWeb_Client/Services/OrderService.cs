@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Text;
 using Tangy_Models.Dtos;
 using TangyWeb_Client.Services.Interfaces;
 
@@ -15,6 +16,22 @@ namespace TangyWeb_Client.Services
             _configuration = configuration;
             BaseServerUrl = _configuration.GetSection("BaseServerUrl").Value;
         }
+
+        public async Task<OrderDto> Create(StripePaymentDto paymentDto)
+        {
+            var content = JsonConvert.SerializeObject(paymentDto);
+            var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync("api/order/create", bodyContent);
+            string responseResult = response.Content.ReadAsStringAsync().Result;
+            if (response.IsSuccessStatusCode)
+            {
+                var result = JsonConvert.DeserializeObject<OrderDto>(responseResult);
+                return result;
+            }
+
+            return new OrderDto();
+        }
+
         public async Task<OrderDto> Get(int orderHeaderId)
         {
             var response = await _httpClient.GetAsync($"/api/order/{orderHeaderId}");

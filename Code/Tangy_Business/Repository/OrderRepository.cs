@@ -35,7 +35,6 @@ namespace Tangy_Business.Repository
                 foreach (var details in order.OrderDetails)
                 {
                     details.OrderHeaderId = order.OrderHeader.Id;
-                   
                 }
 
                 _context.OrderDetails.AddRange(order.OrderDetails);

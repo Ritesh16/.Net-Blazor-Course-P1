@@ -19,7 +19,7 @@ namespace TangyWeb_Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await _orderRepository.GetAll());    
+            return Ok(await _orderRepository.GetAll());
         }
 
         [HttpGet("{orderHeaderId}")]
@@ -45,6 +45,14 @@ namespace TangyWeb_Api.Controllers
             }
 
             return Ok(orderHeader);
+        }
+
+        [HttpPost("Create")]
+        public async Task<IActionResult> Post([FromBody] StripePaymentDto stripePaymentDto)
+        {
+            stripePaymentDto.Order.OrderHeader.OrderDate = DateTime.Now;
+            var result = await _orderRepository.Create(stripePaymentDto.Order);
+            return Ok(result);
         }
     }
 }

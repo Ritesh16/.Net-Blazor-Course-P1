@@ -1,6 +1,8 @@
 ﻿@page "/summary"
 
+@inject IJSRuntime _jsRuntime
 @inject ILocalStorageService _localStorageService
+@inject IOrderService _orderService
 @attribute [Authorize]
 <h3>Summary</h3>
 
@@ -151,5 +153,20 @@ else
 
     private async Task HandleCheckout()
     {
+        try
+        {
+            IsProcessing = true;
+            var paymentDto = new StripePaymentDto()
+                {
+                    Order = Order
+                };
+
+            var orderDTOSaved = await _orderService.Create(paymentDto);
+
+        }
+        catch (Exception e)
+        {
+            await _jsRuntime.ToastrError(e.Message);
+        }
     }
 }
