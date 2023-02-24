@@ -8,6 +8,13 @@ namespace Tangy_Models.Dtos
 {
     public class StripePaymentDto
     {
+        public StripePaymentDto()
+        {
+            SuccessUrl = "OrderConfirmation";
+            CancelUrl = "Summary";
+        }
         public OrderDto Order { get; set; }
+        public string SuccessUrl { get; set; }
+        public string CancelUrl { get; set; }
     }
 }
