@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Stripe.Checkout;
 using Tangy_Business.Repository.Interfaces;
 using Tangy_Models.Dtos;
 
@@ -53,6 +54,29 @@ namespace TangyWeb_Api.Controllers
             stripePaymentDto.Order.OrderHeader.OrderDate = DateTime.Now;
             var result = await _orderRepository.Create(stripePaymentDto.Order);
             return Ok(result);
+        }
+
+        [HttpPost("PaymentSuccessful")]
+        public async Task<IActionResult> PaymentSuccessful([FromBody] OrderHeaderDto orderHeaderDto)
+        {
+            var service = new SessionService();
+            var sessionDetails = service.Get(orderHeaderDto.SessionId);
+
+            if(sessionDetails.PaymentStatus.ToLower() == "paid")
+            {
+                var result = await _orderRepository.MarkPaymentSuccessful(orderHeaderDto.Id);
+                if (result == null)
+                {
+                    return BadRequest(new ErrorModelDto()
+                    {
+                        ErrorMessage = "Cannot mark order as confirmed."
+                    });
+                }
+
+                return Ok(result);
+            }
+
+            return BadRequest();
         }
     }
 }

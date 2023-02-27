@@ -39,11 +39,14 @@ namespace Tangy_Business.Repository
 
                 _context.OrderDetails.AddRange(order.OrderDetails);
                 await _context.SaveChangesAsync();
-                return new OrderDto()
+                var output = new OrderDto()
                 {
                     OrderHeader = _mapper.Map<OrderHeader, OrderHeaderDto>(order.OrderHeader),
                     OrderDetails = _mapper.Map<IEnumerable<OrderDetail>, IEnumerable<OrderDetailDto>>(order.OrderDetails).ToList()
                 };
+
+                output.OrderHeader.Email = orderDto.OrderHeader.Email;
+                return output;
             }
             catch(Exception ex)
             {

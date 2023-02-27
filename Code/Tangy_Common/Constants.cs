@@ -15,5 +15,6 @@
         public const string AuthToken = "auth_token";
 
         public const string UserDetails = "user_details";
+        public const string OrderDetails = "OrderDetails";
     }
 }
