@@ -3,6 +3,7 @@
 @inject IJSRuntime _jsRuntime
 @inject ILocalStorageService _localStorageService
 @inject IOrderService _orderService
+@inject IPaymentService _paymentService
 @attribute [Authorize]
 <h3>Summary</h3>
 
@@ -161,7 +162,20 @@ else
                     Order = Order
                 };
 
+            var result = await _paymentService.Checkout(paymentDto);
+
+            var sessionInfo = result.Data.ToString().Split(';');
+            var sessionId = sessionInfo[0];
+
+
+            Order.OrderHeader.SessionId = sessionId;
+            Order.OrderHeader.PaymentIntentId = sessionInfo[1];
+
+            Order.OrderHeader.SessionId = sessionId;
+
             var orderDTOSaved = await _orderService.Create(paymentDto);
+
+            await _jsRuntime.InvokeVoidAsync("redirectToCheckOut", sessionId);
 
         }
         catch (Exception e)

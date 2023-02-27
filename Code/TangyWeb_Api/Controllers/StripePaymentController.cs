@@ -16,7 +16,7 @@ namespace TangyWeb_Api.Controllers
             _configuration = configuration;
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<IActionResult> Create([FromBody] StripePaymentDto stripePaymentDto)
         {
             try
