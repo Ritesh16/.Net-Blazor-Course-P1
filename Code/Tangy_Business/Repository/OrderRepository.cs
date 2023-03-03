@@ -24,6 +24,40 @@ namespace Tangy_Business.Repository
             _context = context;
             _mapper = mapper;
         }
+
+        public async Task<OrderHeaderDto> CancelOrder(int id)
+        {
+            var orderHeader = await _context.OrderHeaders.FindAsync(id);
+            if (orderHeader == null)
+            {
+                return new OrderHeaderDto();
+            }
+
+            if (orderHeader.Status == Constants.Status_Pending)
+            {
+                orderHeader.Status = Constants.Status_Cancelled;
+                await _context.SaveChangesAsync();
+            }
+            if (orderHeader.Status == Constants.Status_Confirmed)
+            {
+                //refund
+                var options = new Stripe.RefundCreateOptions
+                {
+                    Reason = Stripe.RefundReasons.RequestedByCustomer,
+                    PaymentIntent = orderHeader.PaymentIntentId
+                };
+
+                var service = new Stripe.RefundService();
+                Stripe.Refund refund = service.Create(options);
+
+                orderHeader.Status = Constants.Status_Refunded;
+                await _context.SaveChangesAsync();
+            }
+
+            return _mapper.Map<OrderHeader, OrderHeaderDto>(orderHeader);
+        }
+
+
         public async Task<OrderDto> Create(OrderDto orderDto)
         {
             try
@@ -104,7 +138,7 @@ namespace Tangy_Business.Repository
 
         }
 
-        public async Task<OrderHeaderDto> MarkPaymentSuccessful(int id)
+        public async Task<OrderHeaderDto> MarkPaymentSuccessful(int id, string paymentIntentId)
         {
             var data = await _context.OrderHeaders.FindAsync(id);
             if (data == null)
@@ -113,6 +147,7 @@ namespace Tangy_Business.Repository
             }
             if (data.Status == Constants.Status_Pending)
             {
+                data.PaymentIntentId = paymentIntentId;
                 data.Status = Constants.Status_Confirmed;
                 await _context.SaveChangesAsync();
                 return _mapper.Map<OrderHeader, OrderHeaderDto>(data);

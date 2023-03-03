@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tangy_Models.Dtos;
+﻿using Tangy_Models.Dtos;
 
 namespace Tangy_Business.Repository.Interfaces
 {
@@ -16,8 +11,9 @@ namespace Tangy_Business.Repository.Interfaces
 
         public Task<OrderHeaderDto> UpdateHeader(OrderHeaderDto orderHeaderDTO);
 
-        public Task<OrderHeaderDto> MarkPaymentSuccessful(int id);
+        public Task<OrderHeaderDto> MarkPaymentSuccessful(int id, string paymentIntentId);
         public Task<bool> UpdateOrderStatus(int orderId, string status);
+        public Task<OrderHeaderDto> CancelOrder(int id);
 
     }
 }

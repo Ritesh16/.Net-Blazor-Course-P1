@@ -64,7 +64,7 @@ namespace TangyWeb_Api.Controllers
 
             if(sessionDetails.PaymentStatus.ToLower() == "paid")
             {
-                var result = await _orderRepository.MarkPaymentSuccessful(orderHeaderDto.Id);
+                var result = await _orderRepository.MarkPaymentSuccessful(orderHeaderDto.Id, sessionDetails.PaymentIntentId);
                 if (result == null)
                 {
                     return BadRequest(new ErrorModelDto()
