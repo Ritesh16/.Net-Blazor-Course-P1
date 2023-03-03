@@ -9,7 +9,7 @@
     <h4 class="card-title text-info">Order's List</h4>
     @if (OrderHeaders.Any())
     {
-        <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" FilterMode="FilterMode.Advanced" PageSize="5" AllowPaging="true" AllowSorting="true"
+        <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" FilterMode="FilterMode.Advanced" PageSize="10" AllowPaging="true" AllowSorting="true"
                     Data="OrderHeaders" TItem="OrderHeaderDto" LogicalFilterOperator="LogicalFilterOperator.Or">
             <Columns>
                 <RadzenDataGridColumn TItem="OrderHeaderDto" Property="Id" Filterable="false" Title="ID" Frozen="true" />
@@ -26,12 +26,12 @@
                 </RadzenDataGridColumn>
             </Columns>
         </RadzenDataGrid>
+
     }
     else
     {
         if (IsLoading)
         {
-            //loading gif
             <div class="text-center">
                 <img src="/images/loading.gif">
             </div>
@@ -73,7 +73,7 @@
 }
 
 <style type="text/css">
-    th {
+    .rz-unselectable-text {
         left: 0px;
     }
 </style>

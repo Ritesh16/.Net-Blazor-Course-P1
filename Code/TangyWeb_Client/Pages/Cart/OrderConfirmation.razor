@@ -47,9 +47,9 @@
     {
         IsProcessing = true;
         Order = await _localStorageService.GetItemAsync<OrderDto>(Constants.OrderDetails);
-       
-        var updatedOrder = await _orderService.MarkPaymentSuccessful(Order.OrderHeader);
 
+        var updatedOrder = await _orderService.MarkPaymentSuccessful(Order.OrderHeader);
+        Order.OrderHeader.Status = updatedOrder.Status;
         if(updatedOrder.Status == Constants.Status_Confirmed)
         {
             await _localStorageService.RemoveItemAsync(Constants.OrderDetails);
